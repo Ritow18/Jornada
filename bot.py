@@ -1,6 +1,6 @@
 import os
 from google import genai
-from dotenv import load_dotenv
+from dotenv import load_dotenv #dotenv significa .env (dot env)
 
 # 1. Carrega as variáveis de ambiente do arquivo .env
 load_dotenv()
