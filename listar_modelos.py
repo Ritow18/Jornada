@@ -1,3 +1,5 @@
+#focado somente para identificar qual é o modelo do gemini que ele está pegando e aceitando utilizar.
+
 import os
 from google import genai
 from dotenv import load_dotenv
