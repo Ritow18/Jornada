@@ -13,19 +13,7 @@ LABEL_CRITICIDADE = {"C": "🔴 Crítico", "A": "🟠 Alto", "M": "🟡 Médio"}
 
 os.makedirs(PASTA_BANCO, exist_ok=True)
 
-def carregar_cache() -> list:
-    """
-    Lê o cache de alarmes do ciclo anterior.
-    Retorna lista vazia se o arquivo não existir, estiver corrompido
-    ou contiver um tipo inesperado (dict, null...).
-
-    BUG ORIGINAL: o código anterior não validava o tipo do dado lido.
-    Se uma resposta inesperada da API fosse salva (ex: um dict),
-    o set-comprehension 'ids_antigos' iterava sobre as CHAVES do dict
-    em vez dos alarmes, produzindo um set de strings como {"alarmes","total"}.
-    Como alarme['alarmeId'] é um inteiro, ele nunca estava nesse set,
-    então TODOS os alarmes eram detectados como "novos" a cada ciclo.
-    """
+def carregar_cache() -> list:   
     if not os.path.exists(ARQUIVO_CACHE):
         return []
     try:
@@ -91,12 +79,12 @@ def verificar_mudancas():
     dados_api = buscar_alarmes()
 
     if dados_api is None:
-        print("❌ Falha ao conectar com a API. Cache preservado.")
+        print(" Falha ao conectar com a API. Cache preservado.")
         return
 
     # Proteção extra: garante que a API devolveu uma lista
     if not isinstance(dados_api, list):
-        print(f"❌ Resposta da API com tipo inesperado ({type(dados_api).__name__}). Cache preservado.")
+        print(f" Resposta da API com tipo inesperado ({type(dados_api).__name__}). Cache preservado.")
         return
 
     # ── Carrega estado anterior ──────────────────────────────────────────────

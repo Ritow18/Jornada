@@ -1,0 +1,10 @@
+para rodar o código, basta fazer o seguinte:
+Terminal 1:
+python vigia.py
+Terminal 2: 
+python iniciador.py
+
+eles estão separados para que, no terminal do chat onde você está perguntando para a IA 
+não fique aparecendo mensagens de resposta do vigia, mas também pode ser excluido as funções
+print do vigia e inclui-lo no iniciador depois, porém por enquanto não recomendo para conseguir
+encontrar mais facilmente possiveis erros

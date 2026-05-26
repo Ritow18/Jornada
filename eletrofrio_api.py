@@ -19,8 +19,6 @@ def buscar_alarmes():
                 return None
 
         else:
-            # BUG ORIGINAL: sem este return, a função retornava None implicitamente
-            # porém sem nenhuma mensagem de erro, dificultando o diagnóstico
             print(f" API retornou status {resposta.status_code}: {resposta.text[:200]}")
             return None
 
