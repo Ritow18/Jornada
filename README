@@ -1,10 +1,31 @@
-para rodar o código, basta fazer o seguinte:
+para rodar o código da IA, basta fazer o seguinte:
 Terminal 1:
 python vigia.py
 Terminal 2: 
 python iniciador.py
 
+Certifique-se que ambos os terminais estejam com o ambiente .venv ativado! 
+é possivel verificar isso, observando dentro do terminal, antes do "PS C:|\Users deverá estar escrita em verde (.venv)
+no caso de não estar ativo, basta utilizar este comando no terminal ao qual não está o .venv ativo:
+
+Windows (Command Prompt): .venv\Scripts\activate.bat
+Windows (PowerShell): .\.venv\Scripts\Activate.ps1
+macOS / Linux: source .venv/bin/activate
+
 eles estão separados para que, no terminal do chat onde você está perguntando para a IA 
 não fique aparecendo mensagens de resposta do vigia, mas também pode ser excluido as funções
 print do vigia e inclui-lo no iniciador depois, porém por enquanto não recomendo para conseguir
 encontrar mais facilmente possiveis erros
+---------------//---------------//---------------//---------------//---------------//---------------//---------------//---------------//
+para fazer com que voce receba a mensagem no whatsapp da api, siga o passo a passo:
+1: inicie o servidor flask, e em outro terminal inicie o ngrok, (python servidor_flask.py ; ngrok http 5000 )
+2: é necessário adicionar o numero de telefone no whatsapp, +1 415 523 8886 e depois
+mandar a mensagem exercise-between ou join tomate-azul  
+agora, é só mandar mensagem para o numero, no momento ele está só respondendo algo pré programado, sem integração profunda.
+---------------//---------------//---------------//---------------//---------------//---------------//---------------//---------------//
+encontrar o agente ngrok: ngrok config check
+
+For the main operating systems supported, their default file locations are:
+Linux: ~/.config/ngrok/ngrok.yml
+MacOS (Darwin): ~/Library/Application Support/ngrok/ngrok.yml
+Windows: "%LocalAppData%\ngrok\ngrok.yml" (%LocalAppData is usually %UserProfile%\AppData\Local.)
