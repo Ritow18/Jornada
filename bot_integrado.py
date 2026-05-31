@@ -5,42 +5,51 @@ from google.genai import types
 from dotenv import load_dotenv
 
 load_dotenv()
-client = genai.Client(api_key = os.getenv("GEMINI_API_KEY"))
-
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 ARQUIVO_CACHE = "banco_local/cache_alarmes.json"
 
-try:
-    with open(ARQUIVO_CACHE,"r",encoding="utf-8") as f:
-        alarmes_atuais = json.load(f)
-        dados_para_ia = json.dumps(alarmes_atuais,indent=2,ensure_ascii=False)
-except FileNotFoundError:
-    dados_para_ia = "[]" #garante que se o arquivo não existir, ele não vai passar nada para a IA ao invés de dados antigos
-    print("Aviso: Arquivo do cache não foi encontrado, ps: já rodou o código de busca na API? (vigia)")
+def consultar_ia(mensagem_usuario, numero_cliente):
+    print(f"\n[BOT] Iniciando consulta. Mensagem recebida: '{mensagem_usuario}'")
 
-# 4. Cria a "Personalidade" e injeta os dados na memória base da IA
-instrucao_do_sistema = f"""
-Você é o assistente virtual de suporte técnico da Eletrofrio Refrigeração.
-Segue em seguida, os dados atuais do cache local em tempo real dos equipamentos, responda apenas com base neles, caso contrário
-digaque não é possivel responder a pergunta do usuário:
-{dados_para_ia}
-"""
+    # 1. LÊ O ARQUIVO SEMPRE QUE UMA MENSAGEM CHEGA
+    try:
+        with open(ARQUIVO_CACHE, "r", encoding="utf-8") as f:
+            alarmes_atuais = json.load(f)
 
-# 6. Inicia o Chat
-chat = client.chats.create(
-    model='gemini-2.5-flash',
-    config=types.GenerateContentConfig(system_instruction=instrucao_do_sistema, temperature=0.2)
-)
+        alarmes_atuais.sort(
+        key=lambda x: x.get("alarmeDhCad") or "", 
+        reverse=True
+        )
 
-print("\n  Bot da Eletrofrio integrado e online! (Digite 'sair' para encerrar)")
-print("-" * 60)
-
-while True:
-    mensagem_usuario = input("\nVocê: ")
+        #json.dumps joga tudo para a IA
+        dados_para_ia = json.dumps(alarmes_atuais, indent=2, ensure_ascii=False)
+        print(f"[BOT] Lendo JSON: {len(alarmes_atuais)}")
+    except FileNotFoundError:
+        dados_para_ia = "[]"
+        print("[BOT] ❌ AVISO: cache_alarmes.json não encontrado!")
+        
+    # 3. MONTA O PROMPT DINÂMICO
+    instrucao_do_sistema = f"""
+    Você é o assistente virtual de suporte técnico da Eletrofrio Refrigeração.
+    Estes são os alarmes ativos no momento, baseie suas resposta nestes dados:
+    {dados_para_ia}
     
-    if mensagem_usuario.lower() == 'sair': break
-    
-    print("Pensando...")
+    Responda à pergunta do usuário de forma amigável e concisa para o WhatsApp, baseando-se SOMENTE nesses alarmes.
+    REGRA CRITICA: para saber a data real de QUANDO UM ALARME FOI ABERTO, se baseie no campo "alarmeDhCad" exclusivamente, 
+    NUNCA se baseie no campo "alarmeDesc", NUNCA
+    """
 
-    response = chat.send_message(mensagem_usuario)
-    print(f"\nBot Eletrofrio: {response.text}\n")
-    
+    # 4. CHAMA A IA
+    try:
+        chat = client.chats.create(
+            model='gemini-2.5-flash',
+            config=types.GenerateContentConfig(
+                system_instruction=instrucao_do_sistema, 
+                temperature=0.2
+            )
+        )
+        response = chat.send_message(mensagem_usuario)
+        return response.text
+    except Exception as e:
+        print(f"Erro na IA: {e}")
+        return "Desculpe, meu cérebro (IA) está passando por instabilidades. Tente novamente."

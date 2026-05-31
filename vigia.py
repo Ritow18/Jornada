@@ -20,7 +20,7 @@ def carregar_cache() -> list:
         with open(ARQUIVO_CACHE, 'r', encoding='utf-8') as f:
             dados = json.load(f)
         if not isinstance(dados, list):
-            print(f"⚠️  Cache corrompido (tipo: {type(dados).__name__}). Ignorando e resetando.")
+            print(f"⚠️ Cache corrompido (tipo: {type(dados).__name__}). Ignorando e resetando.")
             return []
         return dados
     except Exception as e:
@@ -29,15 +29,6 @@ def carregar_cache() -> list:
 
 
 def salvar_cache(dados: list):
-    """
-    Salva o snapshot atual da API no cache.
-
-    BUG ORIGINAL: o código anterior não tratava erro de escrita.
-    Se a escrita falhasse silenciosamente, o cache ficava com dados
-    do ciclo anterior e alarmes já vistos continuavam aparecendo como novos.
-    Também não protegia contra sobrescrever com lista vazia em caso de
-    falha momentânea da API.
-    """
     if not dados:
         print(" API retornou lista vazia — cache NÃO será sobrescrito para preservar o estado anterior.")
         return
@@ -45,12 +36,7 @@ def salvar_cache(dados: list):
         with open(ARQUIVO_CACHE, 'w', encoding='utf-8') as f:
             json.dump(dados, f, indent=2, ensure_ascii=False)
     except Exception as e:
-        print(f"❌ Erro crítico ao salvar cache: {e}")
-
-
-# ─────────────────────────────────────────────
-# WHATSAPP (simulação)
-# ─────────────────────────────────────────────
+        print(f"Erro crítico ao salvar cache: {e}")
 
 def montar_mensagem_whatsapp(alarmes_novos: list) -> str:
     qtd = len(alarmes_novos)
@@ -64,11 +50,9 @@ def montar_mensagem_whatsapp(alarmes_novos: list) -> str:
         if len(criticos) > 5:
             linhas.append(f"... e mais {len(criticos)-5} crítico(s).")
         linhas.append(f"\nTotal de novos alarmes: {qtd}")
-        linhas.append("Gostaria de ver todos?")
     else:
         linhas = [f"⚠️ *Eletrofrio Alertas* ⚠️\n"]
         linhas.append(f"Você tem *{qtd}* novo(s) alarme(s) nas suas lojas.")
-        linhas.append("Gostaria de vê-los?")
 
     return "\n".join(linhas)
 
@@ -128,7 +112,7 @@ def verificar_mudancas():
         print("✅ Nenhum novo alarme desde a última checagem.")
 
     if alarmes_resolvidos:
-        print(f"   ✔️  {len(alarmes_resolvidos)} alarme(s) resolvido(s)/saíram da API desde o último ciclo.")
+        print(f"   ✔️ {len(alarmes_resolvidos)} alarme(s) resolvido(s)/saíram da API desde o último ciclo.")
 
     print(f"   📊 Ativos na API agora: {len(dados_api)}  |  Conhecidos no cache: {len(alarmes_antigos)}")
 
@@ -151,8 +135,7 @@ def esperar_proximo_ciclo():
 
 
 if __name__ == "__main__":
-    print("Vigia da Eletrofrio — Detector de Novidades Iniciado!")
-    print("=" * 55)
+    print("Vigia Iniciado!")
     while True:
         verificar_mudancas()
         esperar_proximo_ciclo()
