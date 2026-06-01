@@ -1,0 +1,7 @@
+.env
+.venv/
+.idea/
+__pycache__/
+.idea/
+banco_local/cache_alarmes.json
+banco_local/mapa_contatos.json

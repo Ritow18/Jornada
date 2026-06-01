@@ -1,0 +1,62 @@
+para ativar tudo que é necessário, siga o passo a passo:
+
+1: ativar o ambiente .venv no terminal
+
+Windows (Command Prompt): .venv\Scripts\activate.bat
+Windows (PowerShell): .\.venv\Scripts\Activate.ps1
+macOS / Linux: source .venv/bin/activate
+
+2: de pip install -r requirements.txt para instalar tudo que falta, caso necessário 
+
+3: iniciar com python iniciador.py (para evitar possiveis erros, espere tudo iniciar antes de mandar mensagem para a IA ou fazer alterações)
+---------------//---------------//---------------//---------------//---------------//---------------//---------------//---------------//
+
+depois do passo a passo de cima, para fazer com que voce receba a mensagem no whatsapp da api, 
+siga o passo a passo:
+
+pré requisituo nesta etapa: ter realizado a etapa anterior ; ter uma conta na IAstudio.google e na console.twilio.com. 
+(conta na aistudio é só obrigatório para ter a chave api, a conta na twilio seria para cada individuo que queira receber mensagem whats)
+
+1: adicione um arquivo chamado .env na raiz, com ele, siga o passo a passo do arquivo .env.example
+
+2: "para receber alarmes de criticidade": 
+dentro de banco_local/mapa_contatos.json , adicione o LojaId ao qual vai receber o alerta e seu numero, igual ao do exemplo
+dentro do arquivo.
+
+3: adicione o numero de telefone do twilio ou com o numero indicado no .env.example, ou com o https://console.twilio.com/ ABERTO, 
+no caminho (Messaging -> try it out -> send a whatsapp message ) tendo o numero e o QR code para adicionar, você verá que abaixo do numero
+terá um código, após adicionar o numero, envie esta mensagem para autorizar receber mensagens deste numero. 
+
+4: Rode no terminal " python iniciador.py " e pegue a linha de comando que contém a URL https, algo do tipo:
+https://abc123.ngrok-free.app e dentro do https://console.twilio.com/  -> try it out -> send menssage whats , cole o https do ngrok 
+no campo " When a message comes in ", NÃO SE ESQUEÇA DE adicionar no final /webhook e salve
+
+" caso queira ver a conexão NGROK com TWILIO, basta pegar o http do NGROK após rodar o iniciador.py, colar no navegador, e colar também o 
+https logo abaixo para visualizar o fluxo de mensagem fora do terminal "
+
+agora, é só mandar mensagem para o numero.
+
+---------------//---------------//---------------//---------------//---------------//---------------//---------------//---------------//
+
+por  curiosidade, a ordem que o código faz é a seguinte:
+
+envia mensagem whats ✅
+Flask (porta 5000) ✅
+Ngrok ✅
+Vigia ✅
+Bot integrado ✅
+
+depois inverte
+
+Bot integrado ✅
+Vigia ✅
+Ngrok ✅
+Flask (porta 5000) ✅
+envia mensagem whats ✅
+
+encontrar o agente ngrok: ngrok config check
+
+For the main operating systems supported, their default file locations are:
+Linux: ~/.config/ngrok/ngrok.yml
+MacOS (Darwin): ~/Library/Application Support/ngrok/ngrok.yml
+Windows: "%LocalAppData%\ngrok\ngrok.yml" (%LocalAppData is usually %UserProfile%\AppData\Local.)
