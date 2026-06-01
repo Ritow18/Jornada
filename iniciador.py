@@ -24,7 +24,7 @@ try:
     print("3. Subindo o Vigia...")
     proc_vigia = subprocess.Popen([sys.executable, "vigia.py"])
     processos.append(proc_vigia)
-
+    
     # mais um tempinho pra evitar problema
     time.sleep(3)
 

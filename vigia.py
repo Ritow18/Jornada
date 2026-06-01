@@ -225,7 +225,7 @@ def enviar_alerta_whatsapp(numero: str, mensagem: str) -> bool:
         msg = client.messages.create(
             from_=numero_twilio,
             body=mensagem,
-            to=f"whatsapp:{numero}"
+            to=numero if numero.startswith("whatsapp:") else f"whatsapp:{numero}"
         )
         print(f"[WHATSAPP] ✅ Alerta enviado para {numero} (SID: {msg.sid})")
         return True
